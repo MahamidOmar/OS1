@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.21)
-project(OS1)
+cmake_minimum_required(VERSION 3.19)
+project(skeleton_smash)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
-add_executable(OS1 main.cpp)
+add_executable(skeleton_smash smash.cpp Commands.cpp signals.cpp)
