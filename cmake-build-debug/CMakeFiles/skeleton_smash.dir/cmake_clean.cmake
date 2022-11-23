@@ -1,13 +1,11 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/skeleton_smash.dir/Commands.cpp.obj"
-  "CMakeFiles/skeleton_smash.dir/Commands.cpp.obj.d"
-  "CMakeFiles/skeleton_smash.dir/signals.cpp.obj"
-  "CMakeFiles/skeleton_smash.dir/signals.cpp.obj.d"
-  "CMakeFiles/skeleton_smash.dir/smash.cpp.obj"
-  "CMakeFiles/skeleton_smash.dir/smash.cpp.obj.d"
-  "libskeleton_smash.dll.a"
-  "skeleton_smash.exe"
-  "skeleton_smash.exe.manifest"
+  "CMakeFiles/skeleton_smash.dir/Commands.cpp.o"
+  "CMakeFiles/skeleton_smash.dir/Commands.cpp.o.d"
+  "CMakeFiles/skeleton_smash.dir/signals.cpp.o"
+  "CMakeFiles/skeleton_smash.dir/signals.cpp.o.d"
+  "CMakeFiles/skeleton_smash.dir/smash.cpp.o"
+  "CMakeFiles/skeleton_smash.dir/smash.cpp.o.d"
+  "skeleton_smash"
   "skeleton_smash.pdb"
 )
 

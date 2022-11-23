@@ -1,12 +1,14 @@
 #include <unistd.h>
 #include <string.h>
 #include <iostream>
+#include <memory>
 #include <vector>
 #include <sstream>
 #include <sys/wait.h>
 #include <iomanip>
 #include <limits.h>
 #include "Commands.h"
+#include <signal.h>
 
 using namespace std;
 
@@ -217,6 +219,7 @@ void JobsList::addJob(Command* cmd, bool isStopped)
 {
     removeFinishedJobs();
     int new_id = 0;
+    int pid;
     for(int i = 0 ; i < (int)this->jobs.size() ; ++i)
     {
         if(this->jobs[i]->job_id > new_id)
@@ -225,6 +228,70 @@ void JobsList::addJob(Command* cmd, bool isStopped)
         }
     }
     ++new_id;
-    this->jobs.push_back(make_shared<JobEntry>(new JobEntry())
+
+    time_t now;
+    if (time(&now) == ((time_t) -1) ) {
+        perror("smash error: time failed");
+        return;
+    }
+    DO_SYS(pid = getpid(), getpid); // where to put pid
+    this->jobs.push_back(make_shared<JobEntry>(pid, new_id, 0,cmd->getCmdLine(), now));
 }
 
+void JobsList::printJobsList() {
+    removeFinishedJobs();
+    for (int i = 0; i < jobs.size(); ++i) {
+        time_t now;
+        if (time(&now) == ((time_t) -1) ) {
+            perror("smash error: time failed");
+            return;
+        }
+        time_t difference = difftime(now, jobs[i]->time_added);
+        cout << "[" << jobs[i]->job_id << "] " << jobs[i]->cmd_line <<
+                    " : " << jobs[i]->pid << " " << difference << " secs ";
+
+        if (jobs[i]->is_stopped) {
+            cout << "(stopped)";
+        }
+
+        cout << endl;
+    }
+}
+
+void JobsList::killAllJobs() {
+    cout << "smash: sending SIGKILL signal to " << jobs.size() << " jobs:" << endl;
+    for (int i = 0; i < jobs.size(); ++i) {
+        cout << jobs[i]->pid << ": " << jobs[i]->cmd_line << endl;
+        DO_SYS(kill(jobs[i]->pid, SIGKILL), kill);
+    }
+}
+
+void JobsList::removeFinishedJobs() {
+    vector<shared_ptr<JobEntry>> nonFinished;
+    for (int i = 0; i < jobs.size(); ++i) {
+        if (waitpid(jobs[i]->pid, NULL, WNOHANG) <= 0) {
+            nonFinished.push_back(jobs[i]);
+        }
+    }
+
+    this->jobs = nonFinished;
+}
+
+JobsList::JobEntry *JobsList::getJobById(int jobId) {
+    for (int i = 0; i < jobs.size(); ++i) {
+        if (jobs[i]->job_id == jobId) {
+            return jobs[i].get();
+        }
+    }
+    return nullptr;
+}
+
+void JobsList::removeJobById(int jobId) {
+//    shared_ptr<>
+    for (int i = 0; i < jobs.size(); ++i) {
+        if(this->jobs[i]->job_id == jobId)
+        {
+            this->jobs.erase(jobs[i]);
+        }
+    }
+}
