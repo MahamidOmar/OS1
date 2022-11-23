@@ -52,10 +52,10 @@ RM = "C:\Program Files\JetBrains\CLion 2021.3.4\bin\cmake\win\bin\cmake.exe" -E 
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash"
+CMAKE_SOURCE_DIR = C:\Users\omarz\CLionProjects\OS1
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\cmake-build-debug"
+CMAKE_BINARY_DIR = C:\Users\omarz\CLionProjects\OS1\cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/skeleton_smash.dir/depend.make
@@ -71,44 +71,44 @@ include CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/smash.cpp.obj: CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/smash.cpp.obj: ../smash.cpp
 CMakeFiles/skeleton_smash.dir/smash.cpp.obj: CMakeFiles/skeleton_smash.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/skeleton_smash.dir/smash.cpp.obj"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/skeleton_smash.dir/smash.cpp.obj -MF CMakeFiles\skeleton_smash.dir\smash.cpp.obj.d -o CMakeFiles\skeleton_smash.dir\smash.cpp.obj -c "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\smash.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\omarz\CLionProjects\OS1\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/skeleton_smash.dir/smash.cpp.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/skeleton_smash.dir/smash.cpp.obj -MF CMakeFiles\skeleton_smash.dir\smash.cpp.obj.d -o CMakeFiles\skeleton_smash.dir\smash.cpp.obj -c C:\Users\omarz\CLionProjects\OS1\smash.cpp
 
 CMakeFiles/skeleton_smash.dir/smash.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/skeleton_smash.dir/smash.cpp.i"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\smash.cpp" > CMakeFiles\skeleton_smash.dir\smash.cpp.i
+	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\omarz\CLionProjects\OS1\smash.cpp > CMakeFiles\skeleton_smash.dir\smash.cpp.i
 
 CMakeFiles/skeleton_smash.dir/smash.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/skeleton_smash.dir/smash.cpp.s"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\smash.cpp" -o CMakeFiles\skeleton_smash.dir\smash.cpp.s
+	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\omarz\CLionProjects\OS1\smash.cpp -o CMakeFiles\skeleton_smash.dir\smash.cpp.s
 
 CMakeFiles/skeleton_smash.dir/Commands.cpp.obj: CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/Commands.cpp.obj: ../Commands.cpp
 CMakeFiles/skeleton_smash.dir/Commands.cpp.obj: CMakeFiles/skeleton_smash.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/skeleton_smash.dir/Commands.cpp.obj"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/skeleton_smash.dir/Commands.cpp.obj -MF CMakeFiles\skeleton_smash.dir\Commands.cpp.obj.d -o CMakeFiles\skeleton_smash.dir\Commands.cpp.obj -c "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\Commands.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\omarz\CLionProjects\OS1\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/skeleton_smash.dir/Commands.cpp.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/skeleton_smash.dir/Commands.cpp.obj -MF CMakeFiles\skeleton_smash.dir\Commands.cpp.obj.d -o CMakeFiles\skeleton_smash.dir\Commands.cpp.obj -c C:\Users\omarz\CLionProjects\OS1\Commands.cpp
 
 CMakeFiles/skeleton_smash.dir/Commands.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/skeleton_smash.dir/Commands.cpp.i"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\Commands.cpp" > CMakeFiles\skeleton_smash.dir\Commands.cpp.i
+	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\omarz\CLionProjects\OS1\Commands.cpp > CMakeFiles\skeleton_smash.dir\Commands.cpp.i
 
 CMakeFiles/skeleton_smash.dir/Commands.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/skeleton_smash.dir/Commands.cpp.s"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\Commands.cpp" -o CMakeFiles\skeleton_smash.dir\Commands.cpp.s
+	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\omarz\CLionProjects\OS1\Commands.cpp -o CMakeFiles\skeleton_smash.dir\Commands.cpp.s
 
 CMakeFiles/skeleton_smash.dir/signals.cpp.obj: CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/signals.cpp.obj: ../signals.cpp
 CMakeFiles/skeleton_smash.dir/signals.cpp.obj: CMakeFiles/skeleton_smash.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/skeleton_smash.dir/signals.cpp.obj"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/skeleton_smash.dir/signals.cpp.obj -MF CMakeFiles\skeleton_smash.dir\signals.cpp.obj.d -o CMakeFiles\skeleton_smash.dir\signals.cpp.obj -c "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\signals.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\omarz\CLionProjects\OS1\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/skeleton_smash.dir/signals.cpp.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/skeleton_smash.dir/signals.cpp.obj -MF CMakeFiles\skeleton_smash.dir\signals.cpp.obj.d -o CMakeFiles\skeleton_smash.dir\signals.cpp.obj -c C:\Users\omarz\CLionProjects\OS1\signals.cpp
 
 CMakeFiles/skeleton_smash.dir/signals.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/skeleton_smash.dir/signals.cpp.i"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\signals.cpp" > CMakeFiles\skeleton_smash.dir\signals.cpp.i
+	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\omarz\CLionProjects\OS1\signals.cpp > CMakeFiles\skeleton_smash.dir\signals.cpp.i
 
 CMakeFiles/skeleton_smash.dir/signals.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/skeleton_smash.dir/signals.cpp.s"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\signals.cpp" -o CMakeFiles\skeleton_smash.dir\signals.cpp.s
+	C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\omarz\CLionProjects\OS1\signals.cpp -o CMakeFiles\skeleton_smash.dir\signals.cpp.s
 
 # Object files for target skeleton_smash
 skeleton_smash_OBJECTS = \
@@ -126,7 +126,7 @@ skeleton_smash.exe: CMakeFiles/skeleton_smash.dir/build.make
 skeleton_smash.exe: CMakeFiles/skeleton_smash.dir/linklibs.rsp
 skeleton_smash.exe: CMakeFiles/skeleton_smash.dir/objects1.rsp
 skeleton_smash.exe: CMakeFiles/skeleton_smash.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable skeleton_smash.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\omarz\CLionProjects\OS1\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable skeleton_smash.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\skeleton_smash.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -138,6 +138,6 @@ CMakeFiles/skeleton_smash.dir/clean:
 .PHONY : CMakeFiles/skeleton_smash.dir/clean
 
 CMakeFiles/skeleton_smash.dir/depend:
-	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash" "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash" "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\cmake-build-debug" "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\cmake-build-debug" "C:\Users\omarz\OneDrive - Technion\Desktop\234123 - Operating Systems - מערכות הפעלה\skeleton_smash\skeleton_smash\cmake-build-debug\CMakeFiles\skeleton_smash.dir\DependInfo.cmake" --color=$(COLOR)
+	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\omarz\CLionProjects\OS1 C:\Users\omarz\CLionProjects\OS1 C:\Users\omarz\CLionProjects\OS1\cmake-build-debug C:\Users\omarz\CLionProjects\OS1\cmake-build-debug C:\Users\omarz\CLionProjects\OS1\cmake-build-debug\CMakeFiles\skeleton_smash.dir\DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/skeleton_smash.dir/depend
 
