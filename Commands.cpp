@@ -205,3 +205,26 @@ void ChangeDirCommand::execute() {
         shell.setPrevDir(curr_dir);
     }
 }
+
+//*************** Command ***********
+string Command::getCmdLine()
+{
+    return this->cmd_line;
+}
+
+//***************************Jobs*********
+void JobsList::addJob(Command* cmd, bool isStopped)
+{
+    removeFinishedJobs();
+    int new_id = 0;
+    for(int i = 0 ; i < (int)this->jobs.size() ; ++i)
+    {
+        if(this->jobs[i]->job_id > new_id)
+        {
+            new_id = this->jobs[i]->job_id;
+        }
+    }
+    ++new_id;
+    this->jobs.push_back(make_shared<JobEntry>(new JobEntry())
+}
+

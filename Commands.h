@@ -3,7 +3,10 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 using std::string;
+using std::shared_ptr;
+using std::vector;
 
 #define COMMAND_ARGS_MAX_LENGTH (200)
 #define COMMAND_MAX_ARGS (20)
@@ -23,6 +26,7 @@ protected:
   Command(const char* cmd_line);
   virtual ~Command();
   virtual void execute() = 0;
+  string getCmdLine();
   //virtual void prepare();
   //virtual void cleanup();
   // TODO: Add your extra methods if needed
@@ -96,16 +100,21 @@ public:
 class JobsList {
  public:
   class JobEntry {
+  public:
       int pid;
       int job_id;
-      int group_id;
       bool is_stopped;
+      string cmd_line;
+      time_t time_added;
 
+      JobEntry(int pid , int job_id , bool is_stopped , string cmd_line , time_t time_added)
+      : pid(pid) , job_id(job_id) , is_stopped(is_stopped) , cmd_line(cmd_line), time_added(time_added) {}
   };
  // TODO: Add your data members
+  vector<shared_ptr<JobEntry>> jobs;
  public:
-  JobsList();
-  ~JobsList();
+  JobsList() = default;
+  ~JobsList() = default;
   void addJob(Command* cmd, bool isStopped = false);
   void printJobsList();
   void killAllJobs();
@@ -215,6 +224,8 @@ class SmallShell {
     {
         prev_dir = new_dir;
     }
+
+
 };
 
 #endif //SMASH_COMMAND_H_
