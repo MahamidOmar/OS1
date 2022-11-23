@@ -17,7 +17,8 @@ using std::string;
 
 class Command {
 // TODO: Add your data members
-string cmd_line;
+protected:
+    string cmd_line;
  public:
   Command(const char* cmd_line);
   virtual ~Command();
@@ -61,7 +62,7 @@ class RedirectionCommand : public Command {
 class ChangeDirCommand : public BuiltInCommand {
 // TODO: Add your data members
   public:
-  ChangeDirCommand(const char* cmd_line, char** plastPwd);
+  ChangeDirCommand(const char* cmd_line, char** plastPwd) : BuiltInCommand(cmd_line) {}
   virtual ~ChangeDirCommand() {}
   void execute() override;
 };
@@ -202,9 +203,18 @@ class SmallShell {
     void setShellPrompt(string newShellPrompt);
     string getShellPrompt();
 
-    //for fundtion <showpid>
+    //for function <showpid>
     int getShellPid();
 
+    //for function <cd>
+    string getPrevDir()
+    {
+        return prev_dir;
+    }
+    void setPrevDir(string new_dir)
+    {
+        prev_dir = new_dir;
+    }
 };
 
 #endif //SMASH_COMMAND_H_

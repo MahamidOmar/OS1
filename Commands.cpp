@@ -156,4 +156,52 @@ void ShowPidCommand::execute()
     cout << "smash pid is " << SmallShell::getInstance().getShellPid() << endl;
 }
 
-
+//*********** chdir class **********
+void ChangeDirCommand::execute() {
+    SmallShell &shell = SmallShell::getInstance();
+    string new_dir;
+    string command = this->cmd_line;
+    command = _trim(command);
+    // if (cd) with no parameters
+    if ((int)command.length() == 3)
+    {
+        cerr << "smash error:>\"cd\"";
+        return;
+    }
+    string params_only = command.substr(command.find_first_of(" \n"));
+    params_only = _trim(params_only);
+    string first_param = params_only.substr(0 , params_only.find_first_of(" \n"));
+    //if more than 1 params
+    if(params_only.find_first_of(" \n") != string::npos)
+    {
+        cerr << "smash error: cd: too many arguments" << endl;
+        return;
+    }
+    if(first_param == "-")
+    {
+        if("" == shell.getPrevDir())
+        {
+            cerr << "smash error: cd: OLDPWD not set" << endl;
+            return;
+        }
+        else
+        {
+            new_dir = shell.getPrevDir();
+        }
+    }
+    else
+    {
+        new_dir = first_param;
+    }
+    char curr_dir[PATH_MAX];
+    if(getcwd(curr_dir , sizeof(curr_dir)) == NULL)
+    {
+        perror("smash error: getcwd failed");
+    }
+    int sys_ret;
+    DO_SYS(sys_ret = chdir(new_dir.c_str()) , chdir);
+    if(sys_ret != -1)
+    {
+        shell.setPrevDir(curr_dir);
+    }
+}
