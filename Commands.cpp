@@ -9,6 +9,7 @@
 #include <limits.h>
 #include "Commands.h"
 #include <signal.h>
+#include <csignal>
 
 using namespace std;
 
@@ -318,7 +319,6 @@ JobsList::JobEntry *JobsList::getLastStoppedJob(int *jobId) {
     return nullptr;
 }
 
-
 //********** ForeGround Command ***************
 void ForegroundCommand::execute() {
     string command = _trim(this->cmd_line);
@@ -349,5 +349,16 @@ void ForegroundCommand::execute() {
             return;
         }
     }
-
+    JobsList::JobEntry* job = jobs->getJobById(job_id);
+    if(!job){
+        cerr << "smash error: fg: job-id " << job_id << " does not exist" << endl;
+        return;
+    }
+    //check if the job is stopped, send sigcont
+    if(job->is_stopped){
+        DO_SYS(kill(job->pid , SIGCONT) , kill);
+    }
+    cout << job->cmd_line << " : " << job->pid << endl;
+    jobs->removeJobById(job_id);
+    DO_SYS(waitpid(job->pid , NULL , WUNTRACED) , waitpid);
 }
