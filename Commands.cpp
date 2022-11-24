@@ -288,10 +288,15 @@ JobsList::JobEntry *JobsList::getJobById(int jobId) {
 
 void JobsList::removeJobById(int jobId) {
 //    shared_ptr<>
+    vector<shared_ptr<JobEntry>>::iterator toDelete;
     for (int i = 0; i < jobs.size(); ++i) {
         if(this->jobs[i]->job_id == jobId)
         {
-            this->jobs.erase(jobs[i]);
+            this->jobs.erase(toDelete);
+            return;
         }
+        ++toDelete;
     }
 }
+
+
