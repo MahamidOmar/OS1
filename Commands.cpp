@@ -318,6 +318,8 @@ JobsList::JobEntry *JobsList::getLastStoppedJob(int *jobId) {
     return nullptr;
 }
 
+
+//********** ForeGround Command ***************
 void ForegroundCommand::execute() {
     string command = _trim(this->cmd_line);
     string params_only = "";
@@ -341,6 +343,11 @@ void ForegroundCommand::execute() {
         return;
     }
     if(first_param == ""){
-        shell.
+        jobs->getLastJob(&job_id);
+        if(job_id == 0){
+            cerr << "smash error: fg: jobs list is empty" << endl;
+            return;
+        }
     }
+
 }
