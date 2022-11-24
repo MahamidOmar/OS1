@@ -293,10 +293,24 @@ void JobsList::removeJobById(int jobId) {
         if(this->jobs[i]->job_id == jobId)
         {
             this->jobs.erase(toDelete);
-            return;
         }
         ++toDelete;
     }
 }
 
+JobsList::JobEntry * JobsList::getLastJob(int* lastJobId) {
+    return jobs[jobs.size() - 1].get();
+}
 
+JobsList::JobEntry *JobsList::getLastStoppedJob(int *jobId) {
+    for (int i = jobs.size() - 1; i >= 0; --i) {
+        if (jobs[i]->is_stopped) {
+            return jobs[i].get();
+        }
+    }
+    return nullptr;
+}
+
+void ForegroundCommand::execute() {
+
+}
