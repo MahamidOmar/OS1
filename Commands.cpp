@@ -299,18 +299,48 @@ void JobsList::removeJobById(int jobId) {
 }
 
 JobsList::JobEntry * JobsList::getLastJob(int* lastJobId) {
+    if(jobs.size() == 0){
+        *lastJobId = 0;
+        return nullptr;
+    }
+    *lastJobId = jobs[jobs.size() - 1]->job_id;
     return jobs[jobs.size() - 1].get();
 }
 
 JobsList::JobEntry *JobsList::getLastStoppedJob(int *jobId) {
     for (int i = jobs.size() - 1; i >= 0; --i) {
         if (jobs[i]->is_stopped) {
+            *jobId = jobs[jobs.size() - 1]->job_id;
             return jobs[i].get();
         }
     }
+    *jobId = 0;
     return nullptr;
 }
 
 void ForegroundCommand::execute() {
-
+    string command = _trim(this->cmd_line);
+    string params_only = "";
+    string first_param = "";
+    bool bad_params = false;
+    SmallShell& shell = SmallShell::getInstance();
+    if(command.find_first_of(" \n") != string::npos)
+    {
+        params_only = _trim(command.substr(command.find_first_of(" \n")));
+        first_param = params_only.substr(0 , params_only.find_first_of(" \n"));
+    }
+    int job_id;
+    try{
+        job_id = stoi(first_param);
+    }catch (std::exception& e){
+        bad_params = true;
+    }
+    bad_params = bad_params || (params_only.find_first_of(" \n") != string::npos);
+    if(bad_params){
+        cerr << "smash error: fg: invalid arguments" << endl;
+        return;
+    }
+    if(first_param == ""){
+        shell.
+    }
 }
