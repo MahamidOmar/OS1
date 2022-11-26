@@ -362,3 +362,49 @@ void ForegroundCommand::execute() {
     jobs->removeJobById(job_id);
     DO_SYS(waitpid(job->pid , NULL , WUNTRACED) , waitpid);
 }
+
+//********** BackGround Command ***************
+void BackgroundCommand::execute()
+{
+    string command = _trim(this->cmd_line);
+    string params_only = "";
+    string first_param = "";
+    bool bad_params = false;
+    SmallShell& shell = SmallShell::getInstance();
+    if(command.find_first_of(" \n") != string::npos)
+    {
+        params_only = _trim(command.substr(command.find_first_of(" \n")));
+        first_param = params_only.substr(0 , params_only.find_first_of(" \n"));
+    }
+    int job_id;
+    try{
+        job_id = stoi(first_param);
+    }catch (std::exception& e){
+        bad_params = true;
+    }
+    bad_params = bad_params || (params_only.find_first_of(" \n") != string::npos);
+    if(bad_params){
+        cerr << "smash error: fg: invalid arguments" << endl;
+        return;
+    }
+    if(first_param == ""){
+        jobs->getLastJob(&job_id);
+        if(job_id == 0){
+            cerr << "smash error: fg: jobs list is empty" << endl;
+            return;
+        }
+    }
+    JobsList::JobEntry* job = jobs->getJobById(job_id);
+    if(!job){
+        cerr << "smash error: bg: job-id " << job_id << " does not exist" << endl;
+        return;
+    }
+    //check if the job is stopped, send sigcont
+    if(!job->is_stopped){
+        cerr
+    }
+    cout << job->cmd_line << " : " << job->pid << endl;
+    jobs->removeJobById(job_id);
+    DO_SYS(waitpid(job->pid , NULL , WUNTRACED) , waitpid);
+}
+

@@ -145,8 +145,9 @@ class ForegroundCommand : public BuiltInCommand {
 
 class BackgroundCommand : public BuiltInCommand {
  // TODO: Add your data members
+  JobsList* jobs;
  public:
-  BackgroundCommand(const char* cmd_line, JobsList* jobs);
+  BackgroundCommand(const char* cmd_line, JobsList* jobs) : BuiltInCommand(cmd_line) , jobs(jobs){}
   virtual ~BackgroundCommand() {}
   void execute() override;
 };
