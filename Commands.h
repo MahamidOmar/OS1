@@ -90,8 +90,9 @@ class ShowPidCommand : public BuiltInCommand {
 class JobsList;
 class QuitCommand : public BuiltInCommand {
 // TODO: Add your data members
+    JobsList* jobs;
 public:
-  QuitCommand(const char* cmd_line, JobsList* jobs);
+  QuitCommand(const char* cmd_line, JobsList* jobs) : BuiltInCommand(cmd_line) , jobs(jobs) {}
   virtual ~QuitCommand() {}
   void execute() override;
 };
@@ -182,8 +183,9 @@ class SetcoreCommand : public BuiltInCommand {
 class KillCommand : public BuiltInCommand {
   /* Bonus */
  // TODO: Add your data members
+  JobsList* jobs;
  public:
-  KillCommand(const char* cmd_line, JobsList* jobs);
+  KillCommand(const char* cmd_line, JobsList* jobs) : BuiltInCommand(cmd_line) , jobs(jobs) {}
   virtual ~KillCommand() {}
   void execute() override;
 };

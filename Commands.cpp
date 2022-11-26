@@ -401,10 +401,96 @@ void BackgroundCommand::execute()
     }
     //check if the job is stopped, send sigcont
     if(!job->is_stopped){
-        cerr
+        cerr << "smash error: bg: job-id " << job_id << " is already running in the background" << endl;
+        return;
     }
     cout << job->cmd_line << " : " << job->pid << endl;
-    jobs->removeJobById(job_id);
-    DO_SYS(waitpid(job->pid , NULL , WUNTRACED) , waitpid);
+    DO_SYS(kill(job->pid , SIGCONT) , kill);
+    job->is_stopped = false;
 }
+
+//********** Quit Command ********************
+void QuitCommand::execute()
+{
+    string command = _trim(this->cmd_line);
+    string params_only = "";
+    string first_param = "";
+    if(command.find_first_of(" \n") != string::npos)
+    {
+        params_only = _trim(command.substr(command.find_first_of(" \n")));
+        first_param = params_only.substr(0 , params_only.find_first_of(" \n"));
+    }
+    if(first_param == "kill")
+    {
+        jobs->killAllJobs();
+    }
+    exit(0);
+}
+
+//********** Kill Command ******************
+void KillCommand::execute()
+{
+    string command = _trim(cmd_line);
+    string params_only , first_param;
+    if(command.find_first_of(" \n") != string::npos)
+    {
+        params_only = _trim(command.substr(command.find_first_of(" \n")));
+        first_param = params_only.substr(0 , 1);
+    }
+    if(first_param != "-")
+    {
+        cerr << "smash error: kill: invalid arguments" << endl;
+        return;
+    }
+    params_only = _trim(params_only.substr(1));
+    string sig_str = params_only.substr(0 , params_only.find_first_of(" \n"));
+
+    int signal = 0;
+    //check if signal is a valid number
+    try {
+        signal = stoi(sig_str);
+    }catch (...){
+        cerr << "smash error: kill: invalid arguments" << endl;
+        return;
+    }
+    //check for legal signal
+    if(signal < 1 || signal > 64)
+    {
+        cerr << "smash error: kill: invalid arguments" << endl;
+        return;
+    }
+    if(params_only.find_first_of(" \n") == string::npos)
+    {
+        cerr << "smash error: kill: invalid arguments" << endl;
+        return;
+    }
+    params_only = _trim(params_only.substr(params_only.find_first_of(" \n")));
+    string id_str = params_only.substr(0 , params_only.find_first_of(" \n"));
+    int job_id = 0;
+    try{
+        job_id = stoi(id_str);
+    }catch (...){
+        cerr << "smash error: kill: invalid arguments" << endl;
+        return;
+    }
+
+    JobsList::JobEntry* job = jobs->getJobById(job_id);
+    if(!job)
+    {
+        cerr << "smash error: kill: job-id " << job_id << " does not exist" << endl;
+        return;
+    }
+    DO_SYS(kill(job->pid , signal) , kill);
+    if(signal == SIGSTOP)
+    {
+        job->is_stopped = true;
+    }
+    if(signal == SIGCONT)
+    {
+        job->is_stopped = false;
+    }
+    cout << "signal number " << signal << " was sent to pid " << job->pid << endl;
+}
+
+
 
