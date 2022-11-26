@@ -492,5 +492,38 @@ void KillCommand::execute()
     cout << "signal number " << signal << " was sent to pid " << job->pid << endl;
 }
 
-
+void ExternalCommand::execute()
+{
+    char command[COMMAND_ARGS_MAX_LENGTH];
+    strcpy(command , cmd_line.c_str());
+    bool is_bg = _isBackgroundComamnd(command);
+    SmallShell& smash = SmallShell::getInstance();
+    if(is_bg)
+    {
+        _removeBackgroundSign(command);
+    }
+    //TO DO: Timeout here
+    int pid;
+    DO_SYS(pid = fork() , fork);
+    //father
+    if(pid == 0)
+    {
+        DO_SYS(setpgrp() , setpgrp);
+        DO_SYS(execl("/bin/bash" , "/bin/bash" , "-c" , command , nullptr) , execl);
+    }
+    else if(pid == -1)
+    {
+        return;
+    }
+    if (is_bg)
+    {
+        smash.getJobsList()->addJob(this , pid);
+    }
+    else
+    {
+        //need to add signals
+        int status;
+        DO_SYS(waitpid(pid , &status , WUNTRACED) , waitpid);
+    }
+}
 

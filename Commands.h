@@ -23,8 +23,8 @@ class Command {
 protected:
     string cmd_line;
  public:
-  Command(const char* cmd_line);
-  virtual ~Command();
+  Command(const char* cmd_line) : cmd_line(cmd_line) {}
+  virtual ~Command() = default;
   virtual void execute() = 0;
   string getCmdLine();
   //virtual void prepare();
@@ -40,7 +40,7 @@ class BuiltInCommand : public Command {
 
 class ExternalCommand : public Command {
  public:
-  ExternalCommand(const char* cmd_line);
+  ExternalCommand(const char* cmd_line) : Command(cmd_line) {}
   virtual ~ExternalCommand() {}
   void execute() override;
 };
@@ -196,6 +196,7 @@ class SmallShell {
   string shell_prompt;
   int shell_pid;
   string prev_dir;
+  JobsList* jobs;
 
   SmallShell();
  public:
@@ -229,7 +230,11 @@ class SmallShell {
         prev_dir = new_dir;
     }
 
-
+    //for externals
+    JobsList* getJobsList()
+    {
+        return jobs;
+    }
 };
 
 #endif //SMASH_COMMAND_H_
