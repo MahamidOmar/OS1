@@ -9,7 +9,7 @@ void ctrlZHandler(int sig_num) {
     SmallShell& smash = SmallShell::getInstance();
     int sys_result;
     //check if there is a running job
-    if(smash.running_cmd == "" || smash.running_pid == -1)
+    if(smash.running_cmd != "" && smash.running_pid != -1)
     {
         DO_SYS(sys_result = kill(smash.running_pid , SIGSTOP) , kill);
         if(sys_result == -1)
