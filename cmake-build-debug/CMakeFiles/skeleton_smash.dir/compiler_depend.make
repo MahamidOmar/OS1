@@ -430,7 +430,8 @@ CMakeFiles/skeleton_smash.dir/Commands.cpp.o: ../Commands.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk/usr/include/c++/v1/sstream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk/usr/include/c++/v1/iomanip \
   ../Commands.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk/usr/include/signal.h
+  /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk/usr/include/signal.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk/usr/include/c++/v1/csignal
 
 CMakeFiles/skeleton_smash.dir/signals.cpp.o: ../signals.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk/usr/include/c++/v1/iostream \
@@ -1286,6 +1287,8 @@ CMakeFiles/skeleton_smash.dir/smash.cpp.o: ../smash.cpp \
 
 
 ../signals.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk/usr/include/c++/v1/csignal:
 
 ../Commands.h:
 
