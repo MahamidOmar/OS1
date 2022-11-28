@@ -528,7 +528,6 @@ void ExternalCommand::execute() {
     }
     else
     {
-        //need to add signals
         int status;
         smash.running_pid = pid;
         smash.running_cmd = cmd_line;
