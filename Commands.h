@@ -201,6 +201,9 @@ class SmallShell {
 
   SmallShell();
  public:
+    int running_id;
+    int running_pid;
+    string running_cmd;
   Command *CreateCommand(const char* cmd_line);
   SmallShell(SmallShell const&)      = delete; // disable copy ctor
   void operator=(SmallShell const&)  = delete; // disable = operator
