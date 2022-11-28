@@ -81,7 +81,7 @@ void _removeBackgroundSign(char *cmd_line) {
 
 // TODO: Add your implementation for classes in Commands.h 
 
-SmallShell::SmallShell() : shell_prompt("smash"), prev_dir(""), jobs(new JobsList()) {
+SmallShell::SmallShell() : shell_prompt("smash"), prev_dir(""), jobs(new JobsList()) , running_id(-1) , running_pid(-1) ,running_cmd(""){
     DO_SYS(shell_pid = getpid(), getpid);
 }
 
