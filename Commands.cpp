@@ -10,6 +10,7 @@
 #include "Commands.h"
 #include <signal.h>
 #include <csignal>
+#include <errno.h>
 
 using namespace std;
 
