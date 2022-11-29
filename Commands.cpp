@@ -11,7 +11,7 @@
 #include <signal.h>
 #include <csignal>
 #include <errno.h>
-
+#include <fcntl.h>
 using namespace std;
 
 const std::string WHITESPACE = " \n\r\t\f\v";
@@ -95,12 +95,13 @@ SmallShell::~SmallShell() {
 Command *SmallShell::CreateCommand(const char *cmd_line) {
     string trimmed = _trim(cmd_line);
     string command = trimmed.substr(0, trimmed.find_first_of(" \n"));
-//    if (trimmed.find(">") != string::npos) {
-//        return new RedirectionCommand(cmd_line);
-//    }
-//    if (trimmed.find("|") != string::npos) {
-//        return new PipeCommand(cmd_line);
-//    }
+    if (trimmed.find('>') != string::npos)
+    {
+        return new RedirectionCommand(cmd_line);
+    }
+    if (trimmed.find('|') != string::npos) {
+        return new PipeCommand(cmd_line);
+    }
     if (trimmed == "")
     {
         return nullptr;
@@ -278,14 +279,22 @@ void JobsList::killAllJobs() {
 }
 
 void JobsList::removeFinishedJobs() {
-    vector<shared_ptr<JobEntry>> nonFinished;
-    for (int i = 0; i < jobs.size(); ++i) {
-        if (waitpid(jobs[i]->pid, NULL, WNOHANG) <= 0) {
-            nonFinished.push_back(jobs[i]);
-        }
+//    vector<shared_ptr<JobEntry>> nonFinished;
+//    for (int i = 0; i < jobs.size(); ++i) {
+//        if (waitpid(jobs[i]->pid, NULL, WNOHANG) <= 0) {
+//            nonFinished.push_back(jobs[i]);
+//        }
+//    }
+//
+//    this->jobs = nonFinished;
+    this->jobs.erase(remove_if(jobs.begin() , jobs.end() , [](shared_ptr<JobsList::JobEntry> element)
+    {
+        int pid = element->pid;
+        int flag;
+        flag = waitpid(pid , NULL , WNOHANG);
+        return flag > 0;
     }
-
-    this->jobs = nonFinished;
+    ) , jobs.end());
 }
 
 JobsList::JobEntry *JobsList::getJobById(int jobId) {
@@ -515,7 +524,7 @@ void ExternalCommand::execute() {
     if (pid == -1) {
         return;
     }
-    //father
+    // son
     // if simple command
     if (pid == 0)
     {
@@ -529,19 +538,139 @@ void ExternalCommand::execute() {
             DO_SYS(execl("/bin/bash", "/bin/bash", "-c", command, nullptr), execl);
         }
     }
-    if (is_bg)
+    else
     {
-        smash.getJobsList()->addJob(this, pid);
+        if (is_bg)
+        {
+            smash.getJobsList()->addJob(this, pid);
+        }
+        else
+        { // parent
+            int status;
+            smash.running_pid = pid;
+            smash.running_cmd = cmd_line;
+            DO_SYS(waitpid(pid, &status, WUNTRACED), waitpid);
+            smash.running_pid = -1;
+            smash.running_id = -1;
+            smash.running_cmd = "";
+        }
+    }
+}
+
+//********** Pipe Command **************
+void PipeCommand::execute()
+{
+    string redirect_cmd = cmd_line;
+    redirect_cmd = _trim(redirect_cmd);
+    string cmd1 = "";
+    string cmd2 = "";
+    bool is_pipe_err = redirect_cmd.find("|&") != string::npos;
+    cmd1 = _trim(redirect_cmd.substr(0, redirect_cmd.find_first_of("|")));
+    if (is_pipe_err)
+    {
+        cmd2 = redirect_cmd.substr(redirect_cmd.find_first_of("|&") + 2);
     }
     else
     {
-        int status;
-        smash.running_pid = pid;
-        smash.running_cmd = cmd_line;
-        DO_SYS(waitpid(pid, &status, WUNTRACED), waitpid);
-        smash.running_pid = -1;
-        smash.running_id = -1;
-        smash.running_cmd = "";
+        cmd2 = redirect_cmd.substr(redirect_cmd.find_first_of('|') + 1);
     }
+
+    int pipe_arg[2], flag;
+    DO_SYS(flag = pipe(pipe_arg), pipe);
+
+    // pipe_arg[0] = read, pipe_arg[1] = write.
+    int pid1, pid2;
+    if(is_pipe_err)
+    {
+        DO_SYS(pid1 = fork() , fork);
+        if(pid1 == 0)
+        {
+            DO_SYS(setpgrp() , setpgrp);
+            DO_SYS(dup2(pipe_arg[1] , STDERR_FILENO) , dup2);
+            DO_SYS(close(pipe_arg[0]) , close);
+            DO_SYS(close(pipe_arg[1]) , close);
+            SmallShell::getInstance().executeCommand(cmd1.c_str());
+            exit(0);
+        }
+        DO_SYS(pid2 = fork() , fork);
+        if(pid2 == 0)
+        {
+            DO_SYS(setpgrp() , setpgrp);
+            DO_SYS(dup2(pipe_arg[0] , STDIN_FILENO) , dup2);
+            DO_SYS(close(pipe_arg[0]) , close);
+            DO_SYS(close(pipe_arg[1]) , close);
+            SmallShell::getInstance().executeCommand(cmd2.c_str());
+            exit(0);
+        }
+    }
+    else
+    {
+        DO_SYS(pid1 = fork() , fork);
+        if(pid1 == 0)
+        {
+            DO_SYS(setpgrp() , setpgrp);
+            DO_SYS(dup2(pipe_arg[1] , STDOUT_FILENO) , dup2);
+            DO_SYS(close(pipe_arg[0]) , close);
+            DO_SYS(close(pipe_arg[1]) , close);
+            SmallShell::getInstance().executeCommand(cmd1.c_str());
+            exit(0);
+        }
+        DO_SYS(pid2 = fork() , fork);
+        if(pid2 == 0)
+        {
+            DO_SYS(setpgrp() , setpgrp);
+            DO_SYS(dup2(pipe_arg[0] , STDIN_FILENO) , dup2);
+            DO_SYS(close(pipe_arg[0]) , close);
+            DO_SYS(close(pipe_arg[1]) , close);
+            SmallShell::getInstance().executeCommand(cmd2.c_str());
+            exit(0);
+        }
+    }
+    DO_SYS(close(pipe_arg[0]) , close);
+    DO_SYS(close(pipe_arg[1]) , close);
+
+    DO_SYS(waitpid(pid1 , NULL , 0) , waitpid);
+    DO_SYS(waitpid(pid2 , NULL , 0) , waitpid);
+}
+
+// ************* Redirection Command***********
+void RedirectionCommand::execute()
+{
+    string redirect_cmd = _trim(cmd_line);
+    string cmd = "";
+    string file = "";
+    bool is_append_cmd = redirect_cmd.find("<<") != string::npos;
+    cmd = _trim(redirect_cmd.substr(cmd.find_first_of('>')));
+    int fd;
+
+    int stdout_fd;
+    DO_SYS(stdout_fd = dup(STDOUT_FILENO), dup);
+    DO_SYS(close(STDOUT_FILENO), close);
+
+    if (is_append_cmd)
+    {
+        // append command
+        file = _trim(redirect_cmd.substr(redirect_cmd.find_first_of("<<") + 2));
+        fd = open(file.c_str(), O_WRONLY | O_CREAT | O_APPEND, 0655);
+
+    } else
+    {
+        // non append
+        file = _trim(redirect_cmd.substr(redirect_cmd.find_first_of("<") + 1));
+        fd = open(file.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0655);
+    }
+    if (fd == -1)
+    {
+        perror("smash error: open failed");
+        DO_SYS(dup2(stdout_fd, STDOUT_FILENO), dup2);
+        DO_SYS(close(stdout_fd), close);
+        return;
+    }
+
+    SmallShell::getInstance().executeCommand(cmd.c_str());
+
+    DO_SYS(close(fd), close);
+    DO_SYS(dup2(stdout_fd, STDOUT_FILENO), dup2);
+    DO_SYS(close(stdout_fd), close);
 }
 
