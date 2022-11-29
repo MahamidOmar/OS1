@@ -369,6 +369,9 @@ void ForegroundCommand::execute() {
     if (job->is_stopped) {
         DO_SYS(kill(job->pid, SIGCONT), kill);
     }
+    shell.running_cmd = job->cmd_line;
+    shell.running_pid = job->pid;
+    shell.running_id = job->job_id;
     cout << job->cmd_line << " : " << job->pid << endl;
     jobs->removeJobById(job_id); // change later
     DO_SYS(waitpid(job->pid, NULL, WUNTRACED), waitpid);
@@ -493,6 +496,7 @@ void KillCommand::execute() {
     cout << "signal number " << signal << " was sent to pid " << job->pid << endl;
 }
 
+//********** External Command **************
 void ExternalCommand::execute() {
     char command[COMMAND_ARGS_MAX_LENGTH];
     strcpy(command, cmd_line.c_str());
@@ -531,8 +535,9 @@ void ExternalCommand::execute() {
     }
     else
     {
-        //need to add signals
         int status;
+        smash.running_pid = pid;
+        smash.running_cmd = cmd_line;
         DO_SYS(waitpid(pid, &status, WUNTRACED), waitpid);
         smash.running_pid = -1;
         smash.running_id = -1;
