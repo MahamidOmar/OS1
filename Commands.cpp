@@ -101,6 +101,10 @@ Command *SmallShell::CreateCommand(const char *cmd_line) {
 //    if (trimmed.find("|") != string::npos) {
 //        return new PipeCommand(cmd_line);
 //    }
+    if (trimmed == "")
+    {
+        return nullptr;
+    }
     if (command == "quit") {
         return new QuitCommand(cmd_line, jobs);
     }
@@ -134,7 +138,7 @@ Command *SmallShell::CreateCommand(const char *cmd_line) {
         return new BackgroundCommand(cmd_line, jobs);
     }
     if (command == "fg") {
-        return new BackgroundCommand(cmd_line, jobs);
+        return new ForegroundCommand(cmd_line, jobs);
     }
 
     return new ExternalCommand(cmd_line);
@@ -366,8 +370,11 @@ void ForegroundCommand::execute() {
         DO_SYS(kill(job->pid, SIGCONT), kill);
     }
     cout << job->cmd_line << " : " << job->pid << endl;
-    jobs->removeJobById(job_id);
+    jobs->removeJobById(job_id); // change later
     DO_SYS(waitpid(job->pid, NULL, WUNTRACED), waitpid);
+    shell.running_pid = -1;
+    shell.running_id = -1;
+    shell.running_cmd = "";
 }
 
 //********** BackGround Command ***************
@@ -527,6 +534,9 @@ void ExternalCommand::execute() {
         //need to add signals
         int status;
         DO_SYS(waitpid(pid, &status, WUNTRACED), waitpid);
+        smash.running_pid = -1;
+        smash.running_id = -1;
+        smash.running_cmd = "";
     }
 }
 
