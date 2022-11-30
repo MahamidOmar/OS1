@@ -233,10 +233,9 @@ string Command::getCmdLine() {
 }
 
 //***************************Jobs*********
-void JobsList::addJob(Command *cmd, bool isStopped) {
+void JobsList::addJob(Command *cmd, int pid) {
     removeFinishedJobs();
     int new_id = 0;
-    int pid;
     for (int i = 0; i < (int) this->jobs.size(); ++i) {
         if (this->jobs[i]->job_id > new_id) {
             new_id = this->jobs[i]->job_id;
@@ -249,7 +248,6 @@ void JobsList::addJob(Command *cmd, bool isStopped) {
         perror("smash error: time failed");
         return;
     }
-    DO_SYS(pid = getpid(), getpid); // where to put pid
     this->jobs.push_back(make_shared<JobEntry>(pid, new_id, 0, cmd->getCmdLine(), now));
 }
 
