@@ -154,13 +154,22 @@ class BackgroundCommand : public BuiltInCommand {
   void execute() override;
 };
 
-class TimeoutCommand : public BuiltInCommand {
-/* Optional */
-// TODO: Add your data members
- public:
-  explicit TimeoutCommand(const char* cmd_line);
-  virtual ~TimeoutCommand() {}
-  void execute() override;
+class TimeoutList {
+public:
+    class TimeoutEntry {
+    public:
+        int pid;
+        time_t time_added;
+        time_t duration;
+        string cmd_line;
+        TimeoutEntry(int pid, time_t time_added, time_t duration, string cmd_line) : pid(pid), time_added(time_added),
+        duration(duration), cmd_line(cmd_line){}
+        ~TimeoutEntry() = default;
+    };
+    vector<shared_ptr<TimeoutEntry>> commands;
+    TimeoutList() = default;
+    ~TimeoutList() = default;
+    void addTimeoutCommand(int pid, time_t duration, string cmd_line);
 };
 
 class FareCommand : public BuiltInCommand {
@@ -204,6 +213,7 @@ class SmallShell {
     int running_id;
     int running_pid;
     string running_cmd;
+    TimeoutList* timeouts;
   Command *CreateCommand(const char* cmd_line);
   SmallShell(SmallShell const&)      = delete; // disable copy ctor
   void operator=(SmallShell const&)  = delete; // disable = operator

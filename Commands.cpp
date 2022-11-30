@@ -81,12 +81,15 @@ void _removeBackgroundSign(char *cmd_line) {
 
 // TODO: Add your implementation for classes in Commands.h 
 
-SmallShell::SmallShell() : shell_prompt("smash"), prev_dir(""), jobs(new JobsList()) , running_id(-1) , running_pid(-1) ,running_cmd(""){
+SmallShell::SmallShell() : shell_prompt("smash"), prev_dir(""), jobs(new JobsList()) , running_id(-1) , running_pid(-1)
+                    ,running_cmd(""), timeouts(new TimeoutList()){
     DO_SYS(shell_pid = getpid(), getpid);
 }
 
 SmallShell::~SmallShell() {
 // TODO: add your implementation
+    delete jobs;
+    delete timeouts;
 }
 
 /**
@@ -505,6 +508,36 @@ void KillCommand::execute() {
     cout << "signal number " << signal << " was sent to pid " << job->pid << endl;
 }
 
+string removeTimeoutWord(string cmd_line , time_t* duration)
+{
+    cmd_line = _trim(cmd_line);
+    if(cmd_line.find_first_of(" ") == string::npos)
+    {
+        cerr << "smash error: timeout: invalid arguments" << endl;
+        return "";
+    }
+    cmd_line = _trim(cmd_line.substr(cmd_line.find_first_of(" \n")));
+    if(cmd_line.find_first_of(" ") == string::npos)
+    {
+        cerr << "smash error: timeout: invalid arguments" << endl;
+        return "";
+    }
+    string duration_str = cmd_line.substr(0 , cmd_line.find_first_of(" \n"));
+    try{
+        *duration = stoi(duration_str);
+        if((*duration) < 0)
+        {
+            cerr << "smash error: timeout: invalid arguments" << endl;
+            return "";
+        }
+    }catch (...){
+        cerr << "smash error: timeout: invalid arguments" << endl;
+        return "";
+    }
+    cmd_line = _trim(cmd_line.substr(cmd_line.find_first_of(" \n")));
+    return cmd_line;
+}
+
 //********** External Command **************
 void ExternalCommand::execute() {
     char command[COMMAND_ARGS_MAX_LENGTH];
@@ -514,6 +547,23 @@ void ExternalCommand::execute() {
 
     char *parsed[COMMAND_MAX_ARGS + 1];
     int num_of_args = _parseCommandLine(cmd_line.c_str(), parsed);
+
+
+    bool is_timeout = _trim(parsed[0]) == "timeout";
+    time_t duration;
+
+    if(is_timeout)
+    {
+        string tmp = removeTimeoutWord(command , &duration);
+        if(tmp != "")
+        {
+            strcpy(command , tmp.c_str());
+        }
+        else
+        {
+            return;
+        }
+    }
 
     if (is_bg) {
         _removeBackgroundSign(command);
@@ -554,6 +604,10 @@ void ExternalCommand::execute() {
             smash.running_id = -1;
             smash.running_cmd = "";
         }
+    }
+    if(is_timeout)
+    {
+        smash.timeouts->addTimeoutCommand(pid , duration , cmd_line);
     }
 }
 
@@ -672,5 +726,27 @@ void RedirectionCommand::execute()
     DO_SYS(close(fd), close);
     DO_SYS(dup2(stdout_fd, STDOUT_FILENO), dup2);
     DO_SYS(close(stdout_fd), close);
+}
+
+// ***************TimeOut*******************
+void TimeoutList::addTimeoutCommand(int pid, time_t duration, string cmd_line) {
+    time_t now;
+    if (time(&now) == ((time_t) - 1)) {
+        perror("smash error: time failed");
+        return;
+    }
+
+    int closest_alarm = alarm(0);
+    // if no alarm is currently waiting or new alarm is closer
+    if (closest_alarm == 0 || duration < closest_alarm)
+    {
+        alarm(duration);
+    }
+    else
+    {
+        alarm(closest_alarm);
+    }
+    shared_ptr<TimeoutEntry> new_entry = shared_ptr<TimeoutEntry>(new TimeoutEntry(pid, now, duration, cmd_line));
+    commands.push_back(new_entry);
 }
 
