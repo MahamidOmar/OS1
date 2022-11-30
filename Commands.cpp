@@ -274,10 +274,10 @@ void JobsList::printJobsList() {
         }
         time_t difference = difftime(now, jobs[i]->time_added);
         cout << "[" << jobs[i]->job_id << "] " << jobs[i]->cmd_line <<
-             " : " << jobs[i]->pid << " " << difference << " secs ";
+             " : " << jobs[i]->pid << " " << difference << " secs";
 
         if (jobs[i]->status == STOPPED) {
-            cout << "(stopped)";
+            cout << " (stopped)";
         }
 
         cout << endl;
