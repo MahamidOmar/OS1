@@ -567,6 +567,7 @@ void ExternalCommand::execute() {
 
     if (is_bg) {
         _removeBackgroundSign(command);
+        _parseCommandLine(command, parsed);
     }
     //TO DO: Timeout here
     int pid;
