@@ -2,6 +2,8 @@
 #include <signal.h>
 #include "signals.h"
 #include "Commands.h"
+#include <vector>
+#include <unistd.h>
 
 using namespace std;
 
@@ -42,5 +44,74 @@ void ctrlCHandler(int sig_num) {
 
 void alarmHandler(int sig_num) {
   // TODO: Add your implementation
+    bool flag = true;
+    SmallShell& smash = SmallShell::getInstance();
+    while(flag)
+    {
+        cout << "smash: got an alaram" << endl;
+        smash.getJobsList()->removeFinishedJobs();
+        int seconds_to_alarm = 0;
+        TimeoutList::TimeoutEntry* next_alarm = nullptr;
+        // search for alarmed command
+        for(int i = 0 ; i < smash.timeouts->commands.size() ; ++i)
+        {
+            if (!next_alarm)
+            {
+                next_alarm = smash.timeouts->commands[i].get();
+                seconds_to_alarm = next_alarm->duration + next_alarm->time_added;
+                continue;
+            }
+            if(smash.timeouts->commands[i]->duration + smash.timeouts->commands[i]->time_added < seconds_to_alarm)
+            {
+                next_alarm = smash.timeouts->commands[i].get();
+                seconds_to_alarm = next_alarm->duration + next_alarm->time_added;
+            }
+        }
+        int pid = next_alarm->pid; //Segmentation
+        int sys_result = waitpid(pid , NULL , WNOHANG);
+        if(sys_result == 0)
+        {
+            DO_SYS(kill(pid , SIGKILL) , kill);
+            cout << "smash: " << next_alarm->cmd_line << " timed out!" << endl;
+        }
+        // delete alarmed command
+        for (int i = 0; i < smash.timeouts->commands.size(); ++i)
+        {
+            if (smash.timeouts->commands[i]->pid == next_alarm->pid) {
+                smash.timeouts->commands.erase(smash.timeouts->commands.begin() + i);
+            }
+        }
+
+        if (!smash.timeouts->commands.empty()) {
+            next_alarm = nullptr;
+            seconds_to_alarm = 0;
+            // search for alarmed command
+            for(int i = 0 ; i < smash.timeouts->commands.size() ; ++i)
+            {
+                if (!next_alarm)
+                {
+                    next_alarm = smash.timeouts->commands[i].get();
+                    seconds_to_alarm = next_alarm->duration + next_alarm->time_added;
+                    continue;
+                }
+
+                if(smash.timeouts->commands[i]->duration + smash.timeouts->commands[i]->time_added < seconds_to_alarm)
+                {
+                    next_alarm = smash.timeouts->commands[i].get();
+                    seconds_to_alarm = next_alarm->duration + next_alarm->time_added;
+                }
+            }
+            time_t now;
+            if (time(&now) == ((time_t) -1))
+            {
+                perror("smash error: time faild");
+                return;
+            }
+
+            seconds_to_alarm -= now;
+        }
+        alarm(seconds_to_alarm);
+        flag = seconds_to_alarm == 0;
+    }
 }
 

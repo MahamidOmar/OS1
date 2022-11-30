@@ -282,22 +282,22 @@ void JobsList::killAllJobs() {
 }
 
 void JobsList::removeFinishedJobs() {
-//    vector<shared_ptr<JobEntry>> nonFinished;
-//    for (int i = 0; i < jobs.size(); ++i) {
-//        if (waitpid(jobs[i]->pid, NULL, WNOHANG) <= 0) {
-//            nonFinished.push_back(jobs[i]);
-//        }
-//    }
-//
-//    this->jobs = nonFinished;
-    this->jobs.erase(remove_if(jobs.begin() , jobs.end() , [](shared_ptr<JobsList::JobEntry> element)
-    {
-        int pid = element->pid;
-        int flag;
-        flag = waitpid(pid , NULL , WNOHANG);
-        return flag > 0;
+    vector<shared_ptr<JobEntry>> nonFinished;
+    for (int i = 0; i < jobs.size(); ++i) {
+        if (waitpid(jobs[i]->pid, NULL, WNOHANG) <= 0) {
+            nonFinished.push_back(jobs[i]);
+        }
     }
-    ) , jobs.end());
+
+    this->jobs = nonFinished;
+//    this->jobs.erase(remove_if(jobs.begin() , jobs.end() , [](shared_ptr<JobsList::JobEntry> element)
+//    {
+//        int pid = element->pid;
+//        int flag;
+//        flag = waitpid(pid , NULL , WNOHANG);
+//        return flag > 0;
+//    }
+//    ) , jobs.end());
 }
 
 JobsList::JobEntry *JobsList::getJobById(int jobId) {
