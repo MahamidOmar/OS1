@@ -20,7 +20,7 @@ void ctrlZHandler(int sig_num) {
             return;
         }
         shared_ptr<ExternalCommand> to_stop = shared_ptr<ExternalCommand>(new ExternalCommand(smash.running_cmd.c_str()));
-        smash.getJobsList()->addJob(to_stop.get() , true);
+        smash.getJobsList()->addJob(to_stop.get() , smash.running_pid ,STOPPED);
         cout << "smash: got ctrl-Z" << endl;
         cout << "smash: process " << smash.running_pid << " was stopped" << endl;
     }

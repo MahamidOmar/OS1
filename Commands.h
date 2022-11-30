@@ -18,6 +18,7 @@ using std::vector;
     }         \
   } while(0)  \
 
+enum JobStatus {BACKGROUND, FOREGROUND, STOPPED};
 class Command {
 // TODO: Add your data members
 protected:
@@ -104,19 +105,20 @@ class JobsList {
   public:
       int pid;
       int job_id;
-      bool is_stopped;
+      JobStatus status;
       string cmd_line;
       time_t time_added;
 
-      JobEntry(int pid , int job_id , bool is_stopped , string cmd_line , time_t time_added)
-      : pid(pid) , job_id(job_id) , is_stopped(is_stopped) , cmd_line(cmd_line), time_added(time_added) {}
+
+      JobEntry(int pid , int job_id , JobStatus status , string cmd_line , time_t time_added)
+      : pid(pid) , job_id(job_id) , status(status) , cmd_line(cmd_line), time_added(time_added) {}
   };
  // TODO: Add your data members
   vector<shared_ptr<JobEntry>> jobs;
  public:
   JobsList() = default;
   ~JobsList() = default;
-  void addJob(Command* cmd, int pid);
+  void addJob(Command *cmd, int pid, JobStatus status);
   void printJobsList();
   void killAllJobs();
   void removeFinishedJobs();

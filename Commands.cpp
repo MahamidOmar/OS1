@@ -1,3 +1,4 @@
+
 #include <unistd.h>
 #include <string.h>
 #include <iostream>
@@ -233,22 +234,31 @@ string Command::getCmdLine() {
 }
 
 //***************************Jobs*********
-void JobsList::addJob(Command *cmd, int pid) {
+void JobsList::addJob(Command *cmd, int pid, JobStatus status) {
     removeFinishedJobs();
     int new_id = 0;
+    int index = -1;
     for (int i = 0; i < (int) this->jobs.size(); ++i) {
         if (this->jobs[i]->job_id > new_id) {
             new_id = this->jobs[i]->job_id;
         }
+        if (jobs[i]->pid == pid) {
+            index = i;
+        }
     }
     ++new_id;
-
     time_t now;
     if (time(&now) == ((time_t) -1)) {
         perror("smash error: time failed");
         return;
     }
-    this->jobs.push_back(make_shared<JobEntry>(pid, new_id, 0, cmd->getCmdLine(), now));
+    if (index != -1) {
+        jobs[index]->time_added = now;
+        jobs[index]->status = status;
+        return;
+    }
+
+    this->jobs.push_back(make_shared<JobEntry>(pid, new_id, status, cmd->getCmdLine(), now));
 }
 
 void JobsList::printJobsList() {
@@ -259,11 +269,14 @@ void JobsList::printJobsList() {
             perror("smash error: time failed");
             return;
         }
+        if (jobs[i]->status == FOREGROUND) {
+            continue;
+        }
         time_t difference = difftime(now, jobs[i]->time_added);
         cout << "[" << jobs[i]->job_id << "] " << jobs[i]->cmd_line <<
              " : " << jobs[i]->pid << " " << difference << " secs ";
 
-        if (jobs[i]->is_stopped) {
+        if (jobs[i]->status == STOPPED) {
             cout << "(stopped)";
         }
 
@@ -329,7 +342,7 @@ JobsList::JobEntry *JobsList::getLastJob(int *lastJobId) {
 
 JobsList::JobEntry *JobsList::getLastStoppedJob(int *jobId) {
     for (int i = jobs.size() - 1; i >= 0; --i) {
-        if (jobs[i]->is_stopped) {
+        if (jobs[i]->status == STOPPED) {
             *jobId = jobs[jobs.size() - 1]->job_id;
             return jobs[i].get();
         }
@@ -376,8 +389,9 @@ void ForegroundCommand::execute() {
         return;
     }
     //check if the job is stopped, send sigcont
-    if (job->is_stopped) {
+    if (job->status == STOPPED) {
         DO_SYS(kill(job->pid, SIGCONT), kill);
+        job->status = FOREGROUND;
     }
     shell.running_cmd = job->cmd_line;
     shell.running_pid = job->pid;
@@ -425,13 +439,13 @@ void BackgroundCommand::execute() {
         return;
     }
     //check if the job is stopped, send sigcont
-    if (!job->is_stopped) {
+    if (job->status != STOPPED) {
         cerr << "smash error: bg: job-id " << job_id << " is already running in the background" << endl;
         return;
     }
     cout << job->cmd_line << " : " << job->pid << endl;
     DO_SYS(kill(job->pid, SIGCONT), kill);
-    job->is_stopped = false;
+    job->status = BACKGROUND;
 }
 
 //********** Quit Command ********************
@@ -498,10 +512,10 @@ void KillCommand::execute() {
     }
     DO_SYS(kill(job->pid, signal), kill);
     if (signal == SIGSTOP) {
-        job->is_stopped = true;
+        job->status = STOPPED;
     }
     if (signal == SIGCONT) {
-        job->is_stopped = false;
+        job->status = BACKGROUND;
     }
     cout << "signal number " << signal << " was sent to pid " << job->pid << endl;
 }
