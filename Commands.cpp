@@ -605,7 +605,7 @@ void ExternalCommand::execute() {
     {
         if (is_bg)
         {
-            smash.getJobsList()->addJob(this, pid);
+            smash.getJobsList()->addJob(this , pid , BACKGROUND);
         }
         else
         { // parent
