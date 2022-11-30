@@ -11,6 +11,7 @@ using namespace std;
 void ctrlZHandler(int sig_num) {
     SmallShell& smash = SmallShell::getInstance();
     int sys_result;
+    cout << "smash: got ctrl-Z" << endl;
     //check if there is a running job
     if(smash.running_cmd != "" && smash.running_pid != -1)
     {
@@ -21,7 +22,6 @@ void ctrlZHandler(int sig_num) {
         }
         shared_ptr<ExternalCommand> to_stop = shared_ptr<ExternalCommand>(new ExternalCommand(smash.running_cmd.c_str()));
         smash.getJobsList()->addJob(to_stop.get() , smash.running_pid ,STOPPED);
-        cout << "smash: got ctrl-Z" << endl;
         cout << "smash: process " << smash.running_pid << " was stopped" << endl;
     }
 }
