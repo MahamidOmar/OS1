@@ -729,7 +729,7 @@ void RedirectionCommand::execute()
     string redirect_cmd = _trim(cmd_line);
     string cmd = "";
     string file = "";
-    bool is_append_cmd = redirect_cmd.find("<<") != string::npos;
+    bool is_append_cmd = redirect_cmd.find(">>") != string::npos;
     cmd = _trim(redirect_cmd.substr(cmd.find_first_of('>')));
     int fd;
 
@@ -740,13 +740,13 @@ void RedirectionCommand::execute()
     if (is_append_cmd)
     {
         // append command
-        file = _trim(redirect_cmd.substr(redirect_cmd.find_first_of("<<") + 2));
+        file = _trim(redirect_cmd.substr(redirect_cmd.find_first_of(">>") + 2));
         fd = open(file.c_str(), O_WRONLY | O_CREAT | O_APPEND, 0655);
 
     } else
     {
         // non append
-        file = _trim(redirect_cmd.substr(redirect_cmd.find_first_of("<") + 1));
+        file = _trim(redirect_cmd.substr(redirect_cmd.find_first_of(">") + 1));
         fd = open(file.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0655);
     }
     if (fd == -1)
