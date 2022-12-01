@@ -424,23 +424,29 @@ void BackgroundCommand::execute() {
         first_param = params_only.substr(0, params_only.find_first_of(" \n"));
     }
     int job_id;
-    try {
-        job_id = stoi(first_param);
-    } catch (std::exception &e) {
-        bad_params = true;
-    }
-    bad_params = bad_params || (params_only.find_first_of(" \n") != string::npos);
-    if (bad_params) {
-        cerr << "smash error: bg: invalid arguments" << endl;
-        return;
-    }
     if (first_param == "") {
         jobs->getLastStoppedJob(&job_id);
         if (job_id == 0) {
             cerr << "smash error: bg: jobs list is empty" << endl;
             return;
         }
+    } else
+    {
+        try
+        {
+            job_id = stoi(first_param);
+        } catch (std::exception &e)
+        {
+            bad_params = true;
+        }
+        bad_params = bad_params || (params_only.find_first_of(" \n") != string::npos);
+        if (bad_params)
+        {
+            cerr << "smash error: bg: invalid arguments" << endl;
+            return;
+        }
     }
+
     JobsList::JobEntry *job = jobs->getJobById(job_id);
     if (!job) {
         cerr << "smash error: bg: job-id " << job_id << " does not exist" << endl;
