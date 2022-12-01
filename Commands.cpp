@@ -345,7 +345,7 @@ JobsList::JobEntry *JobsList::getLastJob(int *lastJobId) {
 JobsList::JobEntry *JobsList::getLastStoppedJob(int *jobId) {
     for (int i = jobs.size() - 1; i >= 0; --i) {
         if (jobs[i]->status == STOPPED) {
-            *jobId = jobs[jobs.size() - 1]->job_id;
+            *jobId = jobs[i]->job_id;
             return jobs[i].get();
         }
     }
