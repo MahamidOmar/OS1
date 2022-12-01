@@ -481,11 +481,18 @@ void QuitCommand::execute() {
 void KillCommand::execute() {
     string command = _trim(cmd_line);
     string params_only, first_param;
+    char* parsed[COMMAND_MAX_ARGS + 1];
+    int num_of_args = _parseCommandLine(command.c_str(), parsed);
+
     if (command.find_first_of(" \n") != string::npos) {
         params_only = _trim(command.substr(command.find_first_of(" \n")));
         first_param = params_only.substr(0, 1);
     }
     if (first_param != "-") {
+        cerr << "smash error: kill: invalid arguments" << endl;
+        return;
+    }
+    if (num_of_args > 2) {
         cerr << "smash error: kill: invalid arguments" << endl;
         return;
     }
@@ -519,7 +526,9 @@ void KillCommand::execute() {
         return;
     }
 
+
     JobsList::JobEntry *job = jobs->getJobById(job_id);
+
     if (!job) {
         cerr << "smash error: kill: job-id " << job_id << " does not exist" << endl;
         return;
