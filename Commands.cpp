@@ -427,7 +427,7 @@ void BackgroundCommand::execute() {
     if (first_param == "") {
         jobs->getLastStoppedJob(&job_id);
         if (job_id == 0) {
-            cerr << "smash error: bg: jobs list is empty" << endl;
+            cerr << "smash error: bg: there is no stopped jobs to resume" << endl;
             return;
         }
     } else
