@@ -338,7 +338,7 @@ JobsList::JobEntry *JobsList::getLastJob(int *lastJobId) {
         *lastJobId = 0;
         return nullptr;
     }
-    *lastJobId = jobs.size() - 1;
+    *lastJobId = jobs[jobs.size() - 1]->job_id;
     return jobs[jobs.size() - 1].get();
 }
 
@@ -437,7 +437,7 @@ void BackgroundCommand::execute() {
     if (first_param == "") {
         jobs->getLastStoppedJob(&job_id);
         if (job_id == 0) {
-            cerr << "smash error: fg: jobs list is empty" << endl;
+            cerr << "smash error: bg: jobs list is empty" << endl;
             return;
         }
     }
