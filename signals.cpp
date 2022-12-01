@@ -49,7 +49,7 @@ void alarmHandler(int sig_num) {
     SmallShell& smash = SmallShell::getInstance();
     while(flag)
     {
-        cout << "smash: got an alaram" << endl;
+        cout << "smash: got an alarm" << endl;
         smash.getJobsList()->removeFinishedJobs();
         int seconds_to_alarm = 0;
         TimeoutList::TimeoutEntry* next_alarm = nullptr;
