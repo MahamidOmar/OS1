@@ -295,9 +295,12 @@ void JobsList::killAllJobs() {
 void JobsList::removeFinishedJobs() {
     vector<shared_ptr<JobEntry>> nonFinished;
     for (int i = 0; i < jobs.size(); ++i) {
-        if (waitpid(jobs[i]->pid, NULL, WNOHANG) <= 0) {
+        int sys_ret = 0;
+        sys_ret = waitpid(jobs[i]->pid, NULL, WNOHANG);
+        if (sys_ret == 0) {
             nonFinished.push_back(jobs[i]);
         }
+//        cout << sys_ret << "  job pid = "<<jobs[i]->pid << endl;
     }
 
     this->jobs = nonFinished;
@@ -396,8 +399,8 @@ void ForegroundCommand::execute() {
     //check if the job is stopped, send sigcont
     if (job->status == STOPPED) {
         DO_SYS(kill(job->pid, SIGCONT), kill);
-        job->status = FOREGROUND;
     }
+    job->status = FOREGROUND;
     shell.running_cmd = job->cmd_line;
     shell.running_pid = job->pid;
     shell.running_id = job->job_id;
