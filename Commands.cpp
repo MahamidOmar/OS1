@@ -730,7 +730,7 @@ void RedirectionCommand::execute()
     string cmd = "";
     string file = "";
     bool is_append_cmd = redirect_cmd.find(">>") != string::npos;
-    cmd = _trim(redirect_cmd.substr(redirect_cmd.find_first_of('>')));
+    cmd = _trim(redirect_cmd.substr(0 , redirect_cmd.find_first_of('>')));
     int fd;
 
     int stdout_fd;
