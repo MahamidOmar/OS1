@@ -105,10 +105,9 @@ void alarmHandler(int sig_num) {
             time_t now;
             if (time(&now) == ((time_t) -1))
             {
-                perror("smash error: time faild");
+                perror("smash error: time failed");
                 return;
             }
-
             seconds_to_alarm -= now;
         }
         alarm(seconds_to_alarm);
