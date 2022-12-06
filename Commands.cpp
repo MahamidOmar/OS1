@@ -631,6 +631,10 @@ void ExternalCommand::execute() {
         if (is_bg)
         {
             smash.getJobsList()->addJob(this , pid , BACKGROUND);
+            if(is_timeout)
+            {
+                smash.timeouts->addTimeoutCommand(pid , duration , cmd_line);
+            }
         }
         else
         { // parent
