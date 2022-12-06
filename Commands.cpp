@@ -590,6 +590,7 @@ void ExternalCommand::execute() {
     if(is_timeout)
     {
         string tmp = removeTimeoutWord(command , &duration);
+
         if(tmp != "")
         {
             strcpy(command , tmp.c_str());
@@ -605,6 +606,7 @@ void ExternalCommand::execute() {
         _parseCommandLine(command, parsed);
     }
     //TO DO: Timeout here
+    _parseCommandLine(command, parsed);
     int pid;
     DO_SYS(pid = fork(), fork);
     if (pid == -1) {
