@@ -628,23 +628,19 @@ void ExternalCommand::execute() {
     }
     else
     {
+        if(is_timeout)
+        {
+            smash.timeouts->addTimeoutCommand(pid , duration , cmd_line);
+        }
         if (is_bg)
         {
             smash.getJobsList()->addJob(this , pid , BACKGROUND);
-            if(is_timeout)
-            {
-                smash.timeouts->addTimeoutCommand(pid , duration , cmd_line);
-            }
         }
         else
         { // parent
             int status;
             smash.running_pid = pid;
             smash.running_cmd = cmd_line;
-            if(is_timeout)
-            {
-                smash.timeouts->addTimeoutCommand(pid , duration , cmd_line);
-            }
             DO_SYS(waitpid(pid, &status, WUNTRACED), waitpid);
             smash.running_pid = -1;
             smash.running_id = -1;
